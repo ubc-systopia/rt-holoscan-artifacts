@@ -1,0 +1,14 @@
+digraph G {
+label="Application Performance Graph (latency in ms)\n        Number of messages at sink: 540";
+fontname=Arial;
+fontsize=20;
+fontcolor=black;
+rankdir=TB;
+video_replayer [color=black, penwidth=1.0, label="video_replayer\navg: 29.46\nmin: 27.12\nmax: 30.53"];
+out_of_body_preprocessor [color=black, penwidth=1.0, label="out_of_body_preprocessor\navg: 0.36\nmin: 0.20\nmax: 0.43"];
+out_of_body_inference [color=black, penwidth=1.0, label="out_of_body_inference\navg: 2.32\nmin: 1.50\nmax: 4.46"];
+out_of_body_postprocessor [color=black, penwidth=1.0, label="out_of_body_postprocessor\navg: 0.32\nmin: 0.18\nmax: 0.55"];
+video_replayer -> out_of_body_preprocessor [label="avg: 2.81\nmin: 1.80\nmax: 5.09"];
+out_of_body_preprocessor -> out_of_body_inference [label="avg: 30.44\nmin: 28.15\nmax: 31.69"];
+out_of_body_inference -> out_of_body_postprocessor [label="avg: 0.91\nmin: 0.83\nmax: 1.43"];
+}

@@ -1,0 +1,26 @@
+{
+    "Body Pose Estimation App.replayer_source": {
+        "max": 1686,
+        "min": 1686
+    },
+    "Body Pose Estimation App.preprocessor": {
+        "max": 65,
+        "min": 65
+    },
+    "Body Pose Estimation App.transpose": {
+        "max": 85,
+        "min": 85
+    },
+    "Body Pose Estimation App.inference": {
+        "max": 690,
+        "min": 690
+    },
+    "Body Pose Estimation App.postprocessor": {
+        "max": 1867,
+        "min": 1867
+    },
+    "Body Pose Estimation App.holoviz": {
+        "max": 378,
+        "min": 378
+    }
+}

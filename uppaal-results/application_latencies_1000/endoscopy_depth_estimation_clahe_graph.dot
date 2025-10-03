@@ -1,0 +1,17 @@
+digraph G {
+label="Application Performance Graph (latency in ms)\n        Number of messages at sink: 1140";
+fontname=Arial;
+fontsize=20;
+fontcolor=black;
+rankdir=TB;
+"Depth App.replayer" [color=black, penwidth=1.0, label="Depth App.replayer\navg: 21.59\nmin: 2.54\nmax: 25.45"];
+"Depth App.preprocessor" [color=black, penwidth=1.0, label="Depth App.preprocessor\navg: 0.62\nmin: 0.16\nmax: 1.54"];
+"Depth App.postprocessor" [color=black, penwidth=1.0, label="Depth App.postprocessor\navg: 5.87\nmin: 4.37\nmax: 6.90"];
+"Depth App.holoviz" [color=black, penwidth=1.0, label="Depth App.holoviz\navg: 0.90\nmin: 0.43\nmax: 2.36"];
+"Depth App.inference" [color=black, penwidth=1.0, label="Depth App.inference\navg: 2.34\nmin: 1.19\nmax: 3.20"];
+"Depth App.replayer" -> "Depth App.preprocessor" [label="avg: 9.28\nmin: 6.53\nmax: 11.00"];
+"Depth App.preprocessor" -> "Depth App.postprocessor" [label="avg: 24.63\nmin: 5.28\nmax: 29.23"];
+"Depth App.postprocessor" -> "Depth App.holoviz" [label="avg: 1.29\nmin: 0.45\nmax: 2.30"];
+"Depth App.preprocessor" -> "Depth App.inference" [label="avg: 21.70\nmin: 3.30\nmax: 26.27"];
+"Depth App.inference" -> "Depth App.postprocessor" [label="avg: 0.30\nmin: 0.14\nmax: 0.80"];
+}

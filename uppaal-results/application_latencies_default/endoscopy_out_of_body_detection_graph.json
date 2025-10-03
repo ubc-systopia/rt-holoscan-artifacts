@@ -1,0 +1,18 @@
+{
+    "video_replayer": {
+        "max": 3052,
+        "min": 3052
+    },
+    "out_of_body_preprocessor": {
+        "max": 43,
+        "min": 43
+    },
+    "out_of_body_inference": {
+        "max": 445,
+        "min": 445
+    },
+    "out_of_body_postprocessor": {
+        "max": 54,
+        "min": 54
+    }
+}

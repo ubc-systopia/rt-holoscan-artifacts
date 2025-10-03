@@ -1,0 +1,23 @@
+digraph G {
+label="Application Performance Graph (latency in ms)\n        Number of messages at sink: 2940";
+fontname=Arial;
+fontsize=20;
+fontcolor=black;
+rankdir=TB;
+"Multi AI App.replayer" [color=black, penwidth=1.0, label="Multi AI App.replayer\navg: 2.66\nmin: 2.51\nmax: 3.56"];
+"Multi AI App.segmentation_preprocessor" [color=black, penwidth=1.0, label="Multi AI App.segmentation_preprocessor\navg: 0.36\nmin: 0.27\nmax: 0.94"];
+"Multi AI App.multi_ai_inference" [color=black, penwidth=1.0, label="Multi AI App.multi_ai_inference\navg: 3.66\nmin: 2.21\nmax: 6.44"];
+"Multi AI App.segmentation_postprocessor" [color=black, penwidth=1.0, label="Multi AI App.segmentation_postprocessor\navg: 0.18\nmin: 0.14\nmax: 0.23"];
+"Multi AI App.holoviz" [color=black, penwidth=1.0, label="Multi AI App.holoviz\navg: 1.23\nmin: 1.03\nmax: 4.21"];
+"Multi AI App.detection_preprocessor" [color=black, penwidth=1.0, label="Multi AI App.detection_preprocessor\navg: 0.43\nmin: 0.32\nmax: 0.85"];
+"Multi AI App.detection_postprocessor" [color=black, penwidth=1.0, label="Multi AI App.detection_postprocessor\navg: 3.57\nmin: 2.92\nmax: 5.24"];
+"Multi AI App.replayer" -> "Multi AI App.segmentation_preprocessor" [label="avg: 0.64\nmin: 0.49\nmax: 1.21"];
+"Multi AI App.segmentation_preprocessor" -> "Multi AI App.multi_ai_inference" [label="avg: 0.17\nmin: 0.12\nmax: 0.47"];
+"Multi AI App.multi_ai_inference" -> "Multi AI App.segmentation_postprocessor" [label="avg: 3.91\nmin: 3.31\nmax: 5.50"];
+"Multi AI App.segmentation_postprocessor" -> "Multi AI App.holoviz" [label="avg: 0.50\nmin: 0.37\nmax: 1.23"];
+"Multi AI App.replayer" -> "Multi AI App.detection_preprocessor" [label="avg: 0.13\nmin: 0.09\nmax: 0.32"];
+"Multi AI App.detection_preprocessor" -> "Multi AI App.multi_ai_inference" [label="avg: 0.58\nmin: 0.43\nmax: 1.21"];
+"Multi AI App.multi_ai_inference" -> "Multi AI App.detection_postprocessor" [label="avg: 0.20\nmin: 0.12\nmax: 0.43"];
+"Multi AI App.detection_postprocessor" -> "Multi AI App.holoviz" [label="avg: 0.79\nmin: 0.61\nmax: 1.48"];
+"Multi AI App.replayer" -> "Multi AI App.holoviz" [label="avg: 10.45\nmin: 7.83\nmax: 12.66"];
+}

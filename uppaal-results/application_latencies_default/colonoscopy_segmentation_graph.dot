@@ -1,0 +1,17 @@
+digraph G {
+label="Application Performance Graph (latency in ms)\n        Number of messages at sink: 1140";
+fontname=Arial;
+fontsize=20;
+fontcolor=black;
+rankdir=TB;
+"Colonoscopy App.replayer" [color=black, penwidth=1.0, label="Colonoscopy App.replayer\navg: 22.53\nmin: 2.92\nmax: 24.91"];
+"Colonoscopy App.segmentation_preprocessor" [color=black, penwidth=1.0, label="Colonoscopy App.segmentation_preprocessor\navg: 0.40\nmin: 0.20\nmax: 0.59"];
+"Colonoscopy App.segmentation_inference_holoinfer" [color=black, penwidth=1.0, label="Colonoscopy App.segmentation_inference_holoinfer\navg: 1.94\nmin: 0.96\nmax: 2.90"];
+"Colonoscopy App.segmentation_postprocessor" [color=black, penwidth=1.0, label="Colonoscopy App.segmentation_postprocessor\navg: 0.28\nmin: 0.12\nmax: 0.41"];
+"Colonoscopy App.segmentation_visualizer" [color=black, penwidth=1.0, label="Colonoscopy App.segmentation_visualizer\navg: 6.60\nmin: 5.27\nmax: 11.96"];
+"Colonoscopy App.replayer" -> "Colonoscopy App.segmentation_preprocessor" [label="avg: 0.33\nmin: 0.15\nmax: 0.77"];
+"Colonoscopy App.segmentation_preprocessor" -> "Colonoscopy App.segmentation_inference_holoinfer" [label="avg: 0.23\nmin: 0.10\nmax: 0.73"];
+"Colonoscopy App.segmentation_inference_holoinfer" -> "Colonoscopy App.segmentation_postprocessor" [label="avg: 0.20\nmin: 0.09\nmax: 1.05"];
+"Colonoscopy App.segmentation_postprocessor" -> "Colonoscopy App.segmentation_visualizer" [label="avg: 0.25\nmin: 0.11\nmax: 0.60"];
+"Colonoscopy App.replayer" -> "Colonoscopy App.segmentation_visualizer" [label="avg: 3.57\nmin: 1.92\nmax: 4.93"];
+}

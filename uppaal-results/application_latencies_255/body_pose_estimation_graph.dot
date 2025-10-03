@@ -1,0 +1,19 @@
+digraph G {
+label="Application Performance Graph (latency in ms)\n        Number of messages at sink: 1140";
+fontname=Arial;
+fontsize=20;
+fontcolor=black;
+rankdir=TB;
+"Body Pose Estimation App.replayer_source" [color=black, penwidth=1.0, label="Body Pose Estimation App.replayer_source\navg: 8.36\nmin: 7.87\nmax: 9.84"];
+"Body Pose Estimation App.preprocessor" [color=black, penwidth=1.0, label="Body Pose Estimation App.preprocessor\navg: 0.45\nmin: 0.37\nmax: 0.67"];
+"Body Pose Estimation App.transpose" [color=black, penwidth=1.0, label="Body Pose Estimation App.transpose\navg: 0.58\nmin: 0.48\nmax: 0.95"];
+"Body Pose Estimation App.inference" [color=black, penwidth=1.0, label="Body Pose Estimation App.inference\navg: 3.61\nmin: 2.99\nmax: 6.33"];
+"Body Pose Estimation App.postprocessor" [color=black, penwidth=1.0, label="Body Pose Estimation App.postprocessor\navg: 34.49\nmin: 33.96\nmax: 49.40"];
+"Body Pose Estimation App.holoviz" [color=black, penwidth=1.0, label="Body Pose Estimation App.holoviz\navg: 1.26\nmin: 1.05\nmax: 2.62"];
+"Body Pose Estimation App.replayer_source" -> "Body Pose Estimation App.preprocessor" [label="avg: 0.15\nmin: 0.11\nmax: 0.47"];
+"Body Pose Estimation App.preprocessor" -> "Body Pose Estimation App.transpose" [label="avg: 0.13\nmin: 0.11\nmax: 0.39"];
+"Body Pose Estimation App.transpose" -> "Body Pose Estimation App.inference" [label="avg: 0.45\nmin: 0.28\nmax: 1.52"];
+"Body Pose Estimation App.inference" -> "Body Pose Estimation App.postprocessor" [label="avg: 0.16\nmin: 0.10\nmax: 0.40"];
+"Body Pose Estimation App.postprocessor" -> "Body Pose Estimation App.holoviz" [label="avg: 0.56\nmin: 0.49\nmax: 0.89"];
+"Body Pose Estimation App.replayer_source" -> "Body Pose Estimation App.holoviz" [label="avg: 40.55\nmin: 39.60\nmax: 56.28"];
+}

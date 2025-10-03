@@ -1,0 +1,22 @@
+{
+    "Colonoscopy App.replayer": {
+        "max": 1995,
+        "min": 1995
+    },
+    "Colonoscopy App.segmentation_preprocessor": {
+        "max": 58,
+        "min": 58
+    },
+    "Colonoscopy App.segmentation_inference_holoinfer": {
+        "max": 281,
+        "min": 281
+    },
+    "Colonoscopy App.segmentation_postprocessor": {
+        "max": 41,
+        "min": 41
+    },
+    "Colonoscopy App.segmentation_visualizer": {
+        "max": 1443,
+        "min": 1443
+    }
+}

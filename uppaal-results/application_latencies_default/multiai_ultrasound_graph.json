@@ -1,0 +1,34 @@
+{
+    "Ultrasound App.replayer": {
+        "max": 2651,
+        "min": 2651
+    },
+    "Ultrasound App.aortic_ste_pre": {
+        "max": 43,
+        "min": 43
+    },
+    "Ultrasound App.multiai_inference": {
+        "max": 11301,
+        "min": 11301
+    },
+    "Ultrasound App.postprocessor": {
+        "max": 1309,
+        "min": 1309
+    },
+    "Ultrasound App.visualizer_icardio": {
+        "max": 190,
+        "min": 190
+    },
+    "Ultrasound App.holoviz": {
+        "max": 6569,
+        "min": 6569
+    },
+    "Ultrasound App.plax_cham_pre": {
+        "max": 1322,
+        "min": 1322
+    },
+    "Ultrasound App.b_mode_pers_pre": {
+        "max": 50,
+        "min": 50
+    }
+}

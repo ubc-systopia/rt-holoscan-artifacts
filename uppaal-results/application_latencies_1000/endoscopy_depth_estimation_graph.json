@@ -1,0 +1,22 @@
+{
+    "Depth App.replayer": {
+        "max": 2601,
+        "min": 2601
+    },
+    "Depth App.preprocessor": {
+        "max": 98,
+        "min": 98
+    },
+    "Depth App.postprocessor": {
+        "max": 655,
+        "min": 655
+    },
+    "Depth App.holoviz": {
+        "max": 390,
+        "min": 390
+    },
+    "Depth App.inference": {
+        "max": 308,
+        "min": 308
+    }
+}

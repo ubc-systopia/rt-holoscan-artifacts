@@ -1,0 +1,19 @@
+digraph G {
+    A [WCET=564];
+    B [WCET=706];
+    C [WCET=391];
+    D [WCET=885];
+    E [WCET=120];
+    F [WCET=786];
+    G [WCET=139];
+    
+    A -> B;
+    B -> C;
+    C -> D;
+    C -> E;
+    D -> G;
+    E -> G;
+    A -> F;
+    F -> C;
+    A -> G;
+}

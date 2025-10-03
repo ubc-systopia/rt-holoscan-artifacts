@@ -1,0 +1,438 @@
+<?xml version="1.0" encoding="utf-8"?>
+<nta>
+	<declaration>urgent chan dummy;
+urgent chan start;
+chan finish;
+
+// ——————————————————————————————
+// Model parameters
+// ——————————————————————————————
+const int NUM_ACTORS = 15;
+const int NUM_EDGES = 34;
+const int MAX_TOKENS = 1;
+
+// ——————————————————————————————
+// Typedefs for indices
+// ——————————————————————————————
+typedef int[1, NUM_ACTORS] actor_t;
+typedef int[1, NUM_EDGES] edges_t;
+typedef int[0, MAX_TOKENS-1] index_t;
+
+// ——————————————————————————————
+// Edge metadata (global)
+// ——————————————————————————————
+typedef struct {
+  actor_t from;   // source actor
+  actor_t to;     // destination actor
+} edge_t;
+
+edge_t edges[edges_t] ={
+  { 1, 2 }, // A -&gt; B_start
+  { 1, 3 }, // A -&gt; F_start
+  { 1, 4 }, // A -&gt; H_start
+  { 2, 5 }, // B_start -&gt; B
+  { 6, 7 }, // C_start -&gt; C
+  { 8, 9 }, // D_start -&gt; D
+  { 10, 11 }, // E_start -&gt; E
+  { 3, 12 }, // F_start -&gt; F
+  { 13, 14 }, // G_start -&gt; G
+  { 4, 15 }, // H_start -&gt; H
+  { 5, 2 }, // B -&gt; B_start
+  { 7, 6 }, // C -&gt; C_start
+  { 9, 8 }, // D -&gt; D_start
+  { 11, 10 }, // E -&gt; E_start
+  { 12, 3 }, // F -&gt; F_start
+  { 14, 13 }, // G -&gt; G_start
+  { 15, 4 }, // H -&gt; H_start
+  { 5, 6 }, // B -&gt; C_start
+  { 7, 8 }, // C -&gt; D_start
+  { 9, 10 }, // D -&gt; E_start
+  { 11, 4 }, // E -&gt; H_start
+  { 12, 13 }, // F -&gt; G_start
+  { 14, 8 }, // G -&gt; D_start
+  { 9, 4 }, // D -&gt; H_start
+  { 6, 2 }, // C_start -&gt; B_start
+  { 8, 6 }, // D_start -&gt; C_start
+  { 10, 8 }, // E_start -&gt; D_start
+  { 4, 10 }, // H_start -&gt; E_start
+  { 13, 3 }, // G_start -&gt; F_start
+  { 8, 13 }, // D_start -&gt; G_start
+  { 4, 8 }, // H_start -&gt; D_start
+  { 2, 1 }, // B_start -&gt; A
+  { 3, 1 }, // F_start -&gt; A
+  { 4, 1 } // H_start -&gt; A
+};
+
+
+// ——————————————————————————————————————————
+// Token buffers
+// ——————————————————————————————————————————
+// edge_token[e][slot]
+// slot ∈ {0} only
+bool edge_token[NUM_EDGES+1][MAX_TOKENS] =  {
+  /* unused index 0 */ { false },
+  /* A -&gt; B_start */ { true },
+  /* A -&gt; F_start */ { true },
+  /* A -&gt; H_start */ { true },
+  /* B_start -&gt; B */ { false },
+  /* C_start -&gt; C */ { false },
+  /* D_start -&gt; D */ { false },
+  /* E_start -&gt; E */ { false },
+  /* F_start -&gt; F */ { false },
+  /* G_start -&gt; G */ { false },
+  /* H_start -&gt; H */ { false },
+  /* B -&gt; B_start */ { true },
+  /* C -&gt; C_start */ { true },
+  /* D -&gt; D_start */ { true },
+  /* E -&gt; E_start */ { true },
+  /* F -&gt; F_start */ { true },
+  /* G -&gt; G_start */ { true },
+  /* H -&gt; H_start */ { true },
+  /* B -&gt; C_start */ { true },
+  /* C -&gt; D_start */ { true },
+  /* D -&gt; E_start */ { true },
+  /* E -&gt; H_start */ { true },
+  /* F -&gt; G_start */ { true },
+  /* G -&gt; D_start */ { true },
+  /* D -&gt; H_start */ { true },
+  /* C_start -&gt; B_start */ { true },
+  /* D_start -&gt; C_start */ { true },
+  /* E_start -&gt; D_start */ { true },
+  /* H_start -&gt; E_start */ { true },
+  /* G_start -&gt; F_start */ { true },
+  /* D_start -&gt; G_start */ { true },
+  /* H_start -&gt; D_start */ { true },
+  /* B_start -&gt; A */ { true },
+  /* F_start -&gt; A */ { true },
+  /* H_start -&gt; A */ { true }
+};
+
+// ——————————————————————————————————————————
+// Actor ready-flags
+// ——————————————————————————————————————————
+// actor_ready[a][slot] = true iff all incoming edges into a carry a token
+bool actor_ready[NUM_ACTORS+1][MAX_TOKENS] = {
+  /* unused actor 0 */ { false },
+  /* actor 1 (A) */ { true },
+  /* actor 2 (B_start) */ { false },
+  /* actor 3 (F_start) */ { false },
+  /* actor 4 (H_start) */ { false },
+  /* actor 5 (B) */ { false },
+  /* actor 6 (C_start) */ { false },
+  /* actor 7 (C) */ { false },
+  /* actor 8 (D_start) */ { false },
+  /* actor 9 (D) */ { false },
+  /* actor 10 (E_start) */ { false },
+  /* actor 11 (E) */ { false },
+  /* actor 12 (F) */ { false },
+  /* actor 13 (G_start) */ { false },
+  /* actor 14 (G) */ { false },
+  /* actor 15 (H) */ { false }
+};
+
+
+// ——————————————————————————————
+// Query: has actor `act` all inputs at slot `idx`?
+// (i.e. is it *not* empty?)
+// ——————————————————————————————
+bool empty(actor_t act, index_t idx) {
+  return not actor_ready[act][idx];
+}
+
+// ——————————————————————————————
+// Produce on *all* outgoing edges of `act`, then update downstream flags
+// ——————————————————————————————
+void produce_actor(actor_t act, index_t idx) {
+  actor_t dst;
+  bool all_in;
+  for (e : edges_t) {
+    if (edges[e].from == act) {
+      // place the token
+      edge_token[e][idx] = true;
+      // recompute readiness for the destination actor
+      dst = edges[e].to;
+      all_in = true;
+      for (er : edges_t) {
+        if (edges[er].to == dst &amp;&amp; not edge_token[er][idx]) {
+          all_in = false;
+        }
+      }
+      actor_ready[dst][idx] = all_in;
+    }
+  }
+}
+
+
+// ——————————————————————————————
+// Consume incoming token for `act`, then update its own flag
+// ——————————————————————————————
+void consume_actor(actor_t act, index_t idx) {
+  // Local variables must be declared up front
+  bool      all_in;
+  index_t   next;
+
+  // clear our own readiness at the current slot
+  actor_ready[act][idx] = false;
+
+  // clear tokens on all incoming edges at current slot
+  for (e : edges_t) {
+    if (edges[e].to == act) {
+      edge_token[e][idx] = false;
+    }
+  }
+
+  // compute the next buffer slot (circular)
+  next = (idx + 1) % MAX_TOKENS;
+
+  // check if *all* incoming edges have a token at 'next'
+  all_in = true;
+  for (er : edges_t) {
+    if (edges[er].to == act &amp;&amp; not edge_token[er][next]) {
+      all_in = false;
+    }
+  }
+
+  // u pdate readiness for the next slot
+  actor_ready[act][next] = all_in;
+}</declaration>
+	<template>
+		<name>Actor</name>
+		<parameter> actor_t &amp;id, const int &amp;LOW, const int &amp;HIGH</parameter>
+		<declaration>  clock x;                  // Local clock
+  index_t index = 0;        // Circular buffer index
+</declaration>
+		<location id="id0" x="-8" y="-68">
+			<name x="-34" y="-110">Waiting</name>
+		</location>
+		<location id="id1" x="-8" y="0">
+			<name x="-42" y="17">Executing</name>
+			<label kind="invariant" x="17" y="-8">x &lt;= HIGH</label>
+		</location>
+		<init ref="id0"/>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id0"/>
+			<label kind="guard" x="-212" y="-68">x &gt;= LOW</label>
+			<label kind="assignment" x="-280" y="-51">produce_actor(id, index),  
+index := (index + 1) % MAX_TOKENS</label>
+			<nail x="-42" y="-34"/>
+		</transition>
+		<transition>
+			<source ref="id0"/>
+			<target ref="id1"/>
+			<label kind="guard" x="25" y="-68">!empty(id, index)</label>
+			<label kind="synchronisation" x="25" y="-51">dummy?</label>
+			<label kind="assignment" x="25" y="-34">x := 0, consume_actor(id, index)</label>
+			<nail x="17" y="-34"/>
+		</transition>
+	</template>
+	<template>
+		<name>ActorStart</name>
+		<parameter> actor_t &amp;id, const int &amp;LOW, const int &amp;HIGH</parameter>
+		<declaration>  clock x;                  // Local clock
+  index_t index = 0;        // Circular buffer index
+</declaration>
+		<location id="id2" x="-8" y="-68">
+			<name x="-34" y="-110">Waiting</name>
+		</location>
+		<location id="id3" x="-8" y="0">
+			<name x="-42" y="17">Executing</name>
+			<label kind="invariant" x="17" y="-8">x &lt;= HIGH</label>
+		</location>
+		<init ref="id2"/>
+		<transition>
+			<source ref="id3"/>
+			<target ref="id2"/>
+			<label kind="guard" x="-212" y="-68">x &gt;= LOW</label>
+			<label kind="assignment" x="-280" y="-51">produce_actor(id, index),  
+index := (index + 1) % MAX_TOKENS</label>
+			<nail x="-42" y="-34"/>
+		</transition>
+		<transition>
+			<source ref="id2"/>
+			<target ref="id3"/>
+			<label kind="guard" x="25" y="-68">!empty(id, index)</label>
+			<label kind="synchronisation" x="25" y="-51">start!</label>
+			<label kind="assignment" x="25" y="-34">x := 0, consume_actor(id, index)</label>
+			<nail x="17" y="-34"/>
+		</transition>
+	</template>
+	<template>
+		<name>ActorFinish</name>
+		<parameter> actor_t &amp;id, const int &amp;LOW, const int &amp;HIGH</parameter>
+		<declaration>  clock x;                  // Local clock
+  index_t index = 0;        // Circular buffer index
+</declaration>
+		<location id="id4" x="-8" y="-68">
+			<name x="-34" y="-110">Waiting</name>
+		</location>
+		<location id="id5" x="-8" y="0">
+			<name x="-42" y="17">Executing</name>
+			<label kind="invariant" x="17" y="-8">x &lt;= HIGH</label>
+		</location>
+		<init ref="id4"/>
+		<transition>
+			<source ref="id5"/>
+			<target ref="id4"/>
+			<label kind="guard" x="-212" y="-68">x &gt;= LOW</label>
+			<label kind="synchronisation" x="-187" y="-17">finish!</label>
+			<label kind="assignment" x="-280" y="-51">produce_actor(id, index),  
+index := (index + 1) % MAX_TOKENS</label>
+			<nail x="-42" y="-34"/>
+		</transition>
+		<transition>
+			<source ref="id4"/>
+			<target ref="id5"/>
+			<label kind="guard" x="25" y="-68">!empty(id, index)</label>
+			<label kind="synchronisation" x="25" y="-51">dummy?</label>
+			<label kind="assignment" x="25" y="-34">x := 0, consume_actor(id, index)</label>
+			<nail x="17" y="-34"/>
+		</transition>
+	</template>
+	<template>
+		<name>Timer</name>
+		<declaration>clock r;
+int m = -1;
+int n = 0;</declaration>
+		<location id="id6" x="-17" y="34">
+			<name x="42" y="34">Measuring</name>
+		</location>
+		<location id="id7" x="-17" y="-59">
+			<label kind="invariant" x="34" y="-76">r &lt;= 0</label>
+		</location>
+		<init ref="id7"/>
+		<transition>
+			<source ref="id6"/>
+			<target ref="id6"/>
+			<label kind="guard" x="-119" y="76">m != 0</label>
+			<label kind="synchronisation" x="-119" y="42">finish?</label>
+			<label kind="assignment" x="-136" y="59">m := m - 1, n--</label>
+			<nail x="-42" y="68"/>
+			<nail x="-68" y="42"/>
+		</transition>
+		<transition>
+			<source ref="id6"/>
+			<target ref="id6"/>
+			<label kind="synchronisation" x="0" y="93">start?</label>
+			<label kind="assignment" x="0" y="76">n++</label>
+			<nail x="-17" y="68"/>
+			<nail x="34" y="59"/>
+		</transition>
+		<transition>
+			<source ref="id7"/>
+			<target ref="id7"/>
+			<label kind="synchronisation" x="25" y="-110">start?</label>
+			<label kind="assignment" x="34" y="-93">n++</label>
+			<nail x="25" y="-59"/>
+			<nail x="25" y="-59"/>
+			<nail x="17" y="-85"/>
+		</transition>
+		<transition>
+			<source ref="id7"/>
+			<target ref="id7"/>
+			<label kind="synchronisation" x="-42" y="-144">finish?</label>
+			<label kind="assignment" x="-34" y="-127">n--</label>
+			<nail x="-17" y="-102"/>
+			<nail x="-17" y="-102"/>
+			<nail x="-42" y="-93"/>
+			<nail x="-42" y="-93"/>
+		</transition>
+		<transition>
+			<source ref="id7"/>
+			<target ref="id7"/>
+			<label kind="assignment" x="-93" y="-76">r := 0</label>
+			<nail x="-51" y="-51"/>
+			<nail x="-51" y="-51"/>
+			<nail x="-51" y="-59"/>
+		</transition>
+		<transition>
+			<source ref="id6"/>
+			<target ref="id7"/>
+			<label kind="guard" x="-102" y="-42">m == 0</label>
+			<label kind="synchronisation" x="-110" y="-25">finish?</label>
+			<label kind="assignment" x="-127" y="-8">n--, m := -1,
+r := 0</label>
+			<nail x="-51" y="-16"/>
+		</transition>
+		<transition>
+			<source ref="id7"/>
+			<target ref="id6"/>
+			<label kind="synchronisation" x="25" y="-34">start?</label>
+			<label kind="assignment" x="17" y="-17">r := 0, m := n, n++</label>
+			<nail x="8" y="-16"/>
+			<nail x="8" y="-16"/>
+		</transition>
+	</template>
+	<template>
+		<name>Dummy</name>
+		<location id="id8" x="0" y="0">
+		</location>
+		<init ref="id8"/>
+		<transition>
+			<source ref="id8"/>
+			<target ref="id8"/>
+			<label kind="synchronisation" x="34" y="-17">dummy!</label>
+			<nail x="25" y="-34"/>
+			<nail x="25" y="25"/>
+		</transition>
+	</template>
+	<system>// Actor ID definitions
+actor_t id1 = 1; // A
+actor_t id2 = 2; // B_start
+actor_t id3 = 3; // F_start
+actor_t id4 = 4; // H_start
+actor_t id5 = 5; // B
+actor_t id6 = 6; // C_start
+actor_t id7 = 7; // C
+actor_t id8 = 8; // D_start
+actor_t id9 = 9; // D
+actor_t id10 = 10; // E_start
+actor_t id11 = 11; // E
+actor_t id12 = 12; // F
+actor_t id13 = 13; // G_start
+actor_t id14 = 14; // G
+actor_t id15 = 15; // H
+
+// WCET ranges per actor
+const int LOW_1 = 246, HIGH_1 = 1859; // A
+const int LOW_2 = 0, HIGH_2 = 0; // B_start
+const int LOW_3 = 0, HIGH_3 = 0; // F_start
+const int LOW_4 = 0, HIGH_4 = 0; // H_start
+const int LOW_5 = 26, HIGH_5 = 888; // B
+const int LOW_6 = 0, HIGH_6 = 0; // C_start
+const int LOW_7 = 32, HIGH_7 = 631; // C
+const int LOW_8 = 0, HIGH_8 = 0; // D_start
+const int LOW_9 = 212, HIGH_9 = 1506; // D
+const int LOW_10 = 0, HIGH_10 = 0; // E_start
+const int LOW_11 = 212, HIGH_11 = 1506; // E
+const int LOW_12 = 983, HIGH_12 = 2640; // F
+const int LOW_13 = 0, HIGH_13 = 0; // G_start
+const int LOW_14 = 14, HIGH_14 = 26; // G
+const int LOW_15 = 100, HIGH_15 = 821; // H
+
+// Actor instantiations
+actorA = ActorStart(id1, LOW_1, HIGH_1);
+actorBs = Actor(id2, LOW_2, HIGH_2);
+actorFs = Actor(id3, LOW_3, HIGH_3);
+actorHs = Actor(id4, LOW_4, HIGH_4);
+actorB = Actor(id5, LOW_5, HIGH_5);
+actorCs = Actor(id6, LOW_6, HIGH_6);
+actorC = Actor(id7, LOW_7, HIGH_7);
+actorDs = Actor(id8, LOW_8, HIGH_8);
+actorD = Actor(id9, LOW_9, HIGH_9);
+actorEs = Actor(id10, LOW_10, HIGH_10);
+actorE = Actor(id11, LOW_11, HIGH_11);
+actorF = Actor(id12, LOW_12, HIGH_12);
+actorGs = Actor(id13, LOW_13, HIGH_13);
+actorG = Actor(id14, LOW_14, HIGH_14);
+actorH = ActorFinish(id15, LOW_15, HIGH_15);
+
+system actorA, actorBs, actorFs, actorHs, actorB, actorCs, actorC, actorDs, actorD, actorEs, actorE, actorF, actorGs, actorG, actorH, Dummy, Timer;
+</system>
+	<queries>
+		<query>
+			<formula>sup : r</formula>
+			<comment></comment>
+		</query>
+	</queries>
+</nta>

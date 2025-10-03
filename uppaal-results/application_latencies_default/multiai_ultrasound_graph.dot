@@ -1,0 +1,25 @@
+digraph G {
+label="Application Performance Graph (latency in ms)\n        Number of messages at sink: 14940";
+fontname=Arial;
+fontsize=20;
+fontcolor=black;
+rankdir=TB;
+"Ultrasound App.replayer" [color=black, penwidth=1.0, label="Ultrasound App.replayer\navg: 19.05\nmin: 0.34\nmax: 26.52"];
+"Ultrasound App.aortic_ste_pre" [color=black, penwidth=1.0, label="Ultrasound App.aortic_ste_pre\navg: 0.30\nmin: 0.11\nmax: 0.44"];
+"Ultrasound App.multiai_inference" [color=black, penwidth=1.0, label="Ultrasound App.multiai_inference\navg: 4.91\nmin: 2.51\nmax: 113.01"];
+"Ultrasound App.postprocessor" [color=black, penwidth=1.0, label="Ultrasound App.postprocessor\navg: 0.77\nmin: 0.33\nmax: 13.10"];
+"Ultrasound App.visualizer_icardio" [color=black, penwidth=1.0, label="Ultrasound App.visualizer_icardio\navg: 0.98\nmin: 0.14\nmax: 1.91"];
+"Ultrasound App.holoviz" [color=black, penwidth=1.0, label="Ultrasound App.holoviz\navg: 2.58\nmin: 1.03\nmax: 65.69"];
+"Ultrasound App.plax_cham_pre" [color=black, penwidth=1.0, label="Ultrasound App.plax_cham_pre\navg: 1.77\nmin: 0.16\nmax: 13.22"];
+"Ultrasound App.b_mode_pers_pre" [color=black, penwidth=1.0, label="Ultrasound App.b_mode_pers_pre\navg: 0.27\nmin: 0.10\nmax: 0.51"];
+"Ultrasound App.replayer" -> "Ultrasound App.aortic_ste_pre" [label="avg: 2.18\nmin: 0.30\nmax: 13.59"];
+"Ultrasound App.aortic_ste_pre" -> "Ultrasound App.multiai_inference" [label="avg: 0.69\nmin: 0.27\nmax: 1.26"];
+"Ultrasound App.multiai_inference" -> "Ultrasound App.postprocessor" [label="avg: 0.32\nmin: 0.15\nmax: 1.13"];
+"Ultrasound App.postprocessor" -> "Ultrasound App.visualizer_icardio" [label="avg: 0.26\nmin: 0.12\nmax: 0.91"];
+"Ultrasound App.visualizer_icardio" -> "Ultrasound App.holoviz" [label="avg: 1.37\nmin: 0.52\nmax: 2.12"];
+"Ultrasound App.replayer" -> "Ultrasound App.plax_cham_pre" [label="avg: 0.28\nmin: 0.08\nmax: 0.76"];
+"Ultrasound App.plax_cham_pre" -> "Ultrasound App.multiai_inference" [label="avg: 1.09\nmin: 0.41\nmax: 1.64"];
+"Ultrasound App.replayer" -> "Ultrasound App.b_mode_pers_pre" [label="avg: 2.59\nmin: 0.47\nmax: 14.05"];
+"Ultrasound App.b_mode_pers_pre" -> "Ultrasound App.multiai_inference" [label="avg: 0.33\nmin: 0.12\nmax: 0.86"];
+"Ultrasound App.replayer" -> "Ultrasound App.holoviz" [label="avg: 113.77\nmin: 5.28\nmax: 143.12"];
+}

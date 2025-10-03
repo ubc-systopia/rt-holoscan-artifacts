@@ -1,0 +1,30 @@
+{
+    "Multi AI App.replayer": {
+        "max": 355,
+        "min": 355
+    },
+    "Multi AI App.segmentation_preprocessor": {
+        "max": 93,
+        "min": 93
+    },
+    "Multi AI App.multi_ai_inference": {
+        "max": 643,
+        "min": 643
+    },
+    "Multi AI App.segmentation_postprocessor": {
+        "max": 23,
+        "min": 23
+    },
+    "Multi AI App.holoviz": {
+        "max": 421,
+        "min": 421
+    },
+    "Multi AI App.detection_preprocessor": {
+        "max": 84,
+        "min": 84
+    },
+    "Multi AI App.detection_postprocessor": {
+        "max": 524,
+        "min": 524
+    }
+}
