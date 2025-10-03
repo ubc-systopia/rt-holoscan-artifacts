@@ -3,7 +3,7 @@
 ## Overview
 
 Our artifact has two components. The first is a GitHub repository with code to replicate
-the majority of the results in our paper (figures 8-11). The repository also contains a PDF of the paper itself.
+the majority of the results in our paper (figures 8-11).
 
 The second component is two Docker containers with the necessary dependencies to replicate the remaining UPPAAL graph (figure 7). This README has instructions for the repository experiments, while a separate README in the uppaal-results directory of the repository has instructions specific to the containers.
 
@@ -31,15 +31,7 @@ The sole requirement for the repository experiments is an
 installation of the [Python](https://www.python.org/downloads/release/python-3120/) 
 programming language (we specifically used Python 3.12 and reproduced using Python 3.10; similar versions will likely also work).
 
-The repository can cloned with the following command: 
-
-    git clone https://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@github.com/pschowitz/rtss2025-artifact.git
-
-Once the repository is cloned, navigate to it:
-
-    cd rtss2025-artifact
-
-Finally, install the required Python packages with the below command.
+Once the repository is cloned, navigate to it and install the required Python packages with the below command.
 
     pip install -r requirements.txt
 
