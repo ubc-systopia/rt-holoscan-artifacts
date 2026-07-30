@@ -1,0 +1,13 @@
+Node,lockstep_max_ms,lockstep_p99_ms
+VideoSource,0.5559,0.3111
+FCResize,0.069,0.069
+FCPlaxCham,0.586,0.4186
+FCAorticSTE,1.1061,0.4123
+FCBModePers,1.1231,0.4049
+AIPlaxCham,4.6414,2.9123
+AIAorticSTE,6.4259,4.3427
+AIBModePers,6.0331,4.3558
+PostProcessor,1.7684,0.715
+Visualizer,0.9432,0.6421
+Holoviz,0,0
+Holoviz-prime,2.6715,2.1886

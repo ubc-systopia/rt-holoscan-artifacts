@@ -1,0 +1,140 @@
+{
+  "input": {
+    "graph": "C:\\Users\\phili\\OneDrive\\Documents\\GitHub\\rt-holoscan-artifacts\\rtss2026artifact\\table_v\\inputs\\application.dot",
+    "gpu_profile": "C:\\Users\\phili\\OneDrive\\Documents\\GitHub\\rt-holoscan-artifacts\\rtss2026artifact\\table_v\\inputs\\gpu_execution_profiles.csv",
+    "cpu_profile": "C:\\Users\\phili\\OneDrive\\Documents\\GitHub\\rt-holoscan-artifacts\\rtss2026artifact\\table_v\\inputs\\cpu_execution_profiles.csv",
+    "cpu_column": "lockstep_max_ms",
+    "total_sms": 142,
+    "target_granularity": 2,
+    "operator_order": [
+      "GPU-FCPlaxCham",
+      "GPU-FCAorticSTE",
+      "GPU-FCBModePers",
+      "GPU-AIPlaxCham",
+      "GPU-AIAorticSTE",
+      "GPU-AIBModePers",
+      "GPU-PostProcessor"
+    ],
+    "tg_dfs_expressions": 2489,
+    "setup_seconds": 0.1773306999821216
+  },
+  "milp": {
+    "proven_optimal": true,
+    "partition": [
+      2,
+      2,
+      2,
+      22,
+      66,
+      38,
+      10
+    ],
+    "wcrt_ms": 19.498,
+    "solver_seconds": 0.07009980001021177,
+    "model_and_solve_seconds": 0.09740910003893077,
+    "binary_variables": 497,
+    "constraints": 60,
+    "mip_gap": 0.0
+  },
+  "algorithm_1": [
+    {
+      "name": "practical_coarse_to_fine",
+      "depth": 5,
+      "g_start": 8,
+      "runtime_seconds": 0.014486700063571334,
+      "partition": [
+        4,
+        4,
+        8,
+        28,
+        46,
+        32,
+        20
+      ],
+      "wcrt_ms": 19.819,
+      "optimum_gap_percent": 1.6463226997640679,
+      "candidate_evaluations": 55,
+      "unique_partitions": 47,
+      "feasible_unique_partitions": 47,
+      "refinement_rounds": 11
+    },
+    {
+      "name": "practical_direct",
+      "depth": 5,
+      "g_start": 2,
+      "runtime_seconds": 0.014098300016485155,
+      "partition": [
+        20,
+        20,
+        20,
+        20,
+        20,
+        22,
+        20
+      ],
+      "wcrt_ms": 21.491,
+      "optimum_gap_percent": 10.221561185762635,
+      "candidate_evaluations": 10,
+      "unique_partitions": 9,
+      "feasible_unique_partitions": 9,
+      "refinement_rounds": 2
+    },
+    {
+      "name": "high_depth_coarse_to_fine",
+      "depth": 15000,
+      "g_start": 8,
+      "runtime_seconds": 2.282782700029202,
+      "partition": [
+        2,
+        2,
+        2,
+        22,
+        66,
+        38,
+        10
+      ],
+      "wcrt_ms": 19.498,
+      "optimum_gap_percent": 0.0,
+      "candidate_evaluations": 76016,
+      "unique_partitions": 56875,
+      "feasible_unique_partitions": 56875,
+      "refinement_rounds": 6
+    },
+    {
+      "name": "high_depth_direct",
+      "depth": 15000,
+      "g_start": 2,
+      "runtime_seconds": 5.3809943000087515,
+      "partition": [
+        6,
+        8,
+        12,
+        22,
+        44,
+        32,
+        18
+      ],
+      "wcrt_ms": 19.818,
+      "optimum_gap_percent": 1.6411939686121666,
+      "candidate_evaluations": 105000,
+      "unique_partitions": 81198,
+      "feasible_unique_partitions": 81198,
+      "refinement_rounds": 7
+    }
+  ],
+  "sampled_partition_distribution": {
+    "seed": 2026,
+    "sample_count": 1000000,
+    "full_partition_count": 131115985,
+    "threshold_wcrt_ms": 19.819,
+    "sample_equal_or_better": 100,
+    "estimated_equal_or_better_fraction": 0.0001,
+    "estimated_best_percent": 0.01,
+    "estimated_fraction_standard_error": 9.999499987499376e-06,
+    "sample_median_wcrt_ms": 42.077,
+    "random_search_budget": 47,
+    "estimated_random_success_probability": 0.004689206197178275,
+    "sampling_seconds": 1.9941279999911785,
+    "practical_below_median_percent": 52.898257955652724
+  }
+}
