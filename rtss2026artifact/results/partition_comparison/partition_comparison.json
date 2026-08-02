@@ -4,6 +4,7 @@
     "gpu_profile": "C:\\Users\\phili\\OneDrive\\Documents\\GitHub\\rt-holoscan-artifacts\\rtss2026artifact\\table_v\\inputs\\gpu_execution_profiles.csv",
     "cpu_profile": "C:\\Users\\phili\\OneDrive\\Documents\\GitHub\\rt-holoscan-artifacts\\rtss2026artifact\\table_v\\inputs\\cpu_execution_profiles.csv",
     "cpu_column": "lockstep_max_ms",
+    "full_gpu_profile": "C:\\Users\\phili\\OneDrive\\Documents\\GitHub\\rt-holoscan-artifacts\\rtss2026artifact\\table_v\\inputs\\gpu_execution_times_2025_baseline.csv",
     "total_sms": 142,
     "target_granularity": 2,
     "operator_order": [
@@ -16,7 +17,7 @@
       "GPU-PostProcessor"
     ],
     "tg_dfs_expressions": 2489,
-    "setup_seconds": 0.1773306999821216
+    "setup_seconds": 0.23421369981952012
   },
   "milp": {
     "proven_optimal": true,
@@ -30,18 +31,140 @@
       10
     ],
     "wcrt_ms": 19.498,
-    "solver_seconds": 0.07009980001021177,
-    "model_and_solve_seconds": 0.09740910003893077,
+    "solver_seconds": 0.12168330000713468,
+    "model_and_solve_seconds": 0.1507115000858903,
     "binary_variables": 497,
     "constraints": 60,
     "mip_gap": 0.0
+  },
+  "baseline_2025": {
+    "analysis_implementation": "C:\\Users\\phili\\OneDrive\\Documents\\GitHub\\rt-holoscan-artifacts\\rtss2025artifact\\code\\TG_DFS.py",
+    "generated_graph": "C:\\Users\\phili\\OneDrive\\Documents\\GitHub\\rt-holoscan-artifacts\\rtss2026artifact\\results\\partition_comparison\\application_2025_serialized.dot",
+    "model": "synchronous CPU + 142-SM GPU chain with a direct source-to-sink edge preventing cross-iteration pipelining",
+    "operator_order": [
+      "VideoSource",
+      "FCResize",
+      "FCPlaxCham",
+      "FCAorticSTE",
+      "FCBModePers",
+      "AIPlaxCham",
+      "AIAorticSTE",
+      "AIBModePers",
+      "PostProcessor",
+      "Visualizer",
+      "Holoviz"
+    ],
+    "operator_times": [
+      {
+        "name": "VideoSource",
+        "cpu_time_us": 555,
+        "gpu_time_us": 0,
+        "combined_time_us": 555
+      },
+      {
+        "name": "FCResize",
+        "cpu_time_us": 69,
+        "gpu_time_us": 0,
+        "combined_time_us": 69
+      },
+      {
+        "name": "FCPlaxCham",
+        "cpu_time_us": 586,
+        "gpu_time_us": 7,
+        "combined_time_us": 593
+      },
+      {
+        "name": "FCAorticSTE",
+        "cpu_time_us": 1106,
+        "gpu_time_us": 7,
+        "combined_time_us": 1113
+      },
+      {
+        "name": "FCBModePers",
+        "cpu_time_us": 1123,
+        "gpu_time_us": 7,
+        "combined_time_us": 1130
+      },
+      {
+        "name": "AIPlaxCham",
+        "cpu_time_us": 4641,
+        "gpu_time_us": 1229,
+        "combined_time_us": 5870
+      },
+      {
+        "name": "AIAorticSTE",
+        "cpu_time_us": 6425,
+        "gpu_time_us": 2535,
+        "combined_time_us": 8960
+      },
+      {
+        "name": "AIBModePers",
+        "cpu_time_us": 6033,
+        "gpu_time_us": 2297,
+        "combined_time_us": 8330
+      },
+      {
+        "name": "PostProcessor",
+        "cpu_time_us": 1768,
+        "gpu_time_us": 22,
+        "combined_time_us": 1790
+      },
+      {
+        "name": "Visualizer",
+        "cpu_time_us": 943,
+        "gpu_time_us": 0,
+        "combined_time_us": 943
+      },
+      {
+        "name": "Holoviz",
+        "cpu_time_us": 2671,
+        "gpu_time_us": 59,
+        "combined_time_us": 2730
+      }
+    ],
+    "tg_dfs_expressions": 12,
+    "wcrt_ms": 32.083,
+    "new_analysis_wcrt_ms": 19.498,
+    "new_analysis_reduction_percent": 39.22638157279555,
+    "baseline_to_new_ratio": 1.645450815468253,
+    "valid_serializations": 810,
+    "best_case_serialized_wcrt_ms": 32.083,
+    "best_case_serialization": [
+      "VideoSource",
+      "FCBModePers",
+      "AIBModePers",
+      "FCAorticSTE",
+      "AIAorticSTE",
+      "FCPlaxCham",
+      "AIPlaxCham",
+      "PostProcessor",
+      "Visualizer",
+      "FCResize",
+      "Holoviz"
+    ],
+    "worst_case_serialized_wcrt_ms": 32.083,
+    "worst_case_serialization": [
+      "VideoSource",
+      "FCBModePers",
+      "AIBModePers",
+      "FCAorticSTE",
+      "AIAorticSTE",
+      "FCPlaxCham",
+      "AIPlaxCham",
+      "PostProcessor",
+      "Visualizer",
+      "FCResize",
+      "Holoviz"
+    ],
+    "new_analysis_reduction_vs_best_serialization_percent": 39.22638157279556,
+    "best_serialization_to_new_ratio": 1.6454508154682532
   },
   "algorithm_1": [
     {
       "name": "practical_coarse_to_fine",
       "depth": 5,
       "g_start": 8,
-      "runtime_seconds": 0.014486700063571334,
+      "runtime_seconds": 0.018269200110808015,
       "partition": [
         4,
         4,
@@ -62,7 +185,7 @@
       "name": "practical_direct",
       "depth": 5,
       "g_start": 2,
-      "runtime_seconds": 0.014098300016485155,
+      "runtime_seconds": 0.01422169990837574,
       "partition": [
         20,
         20,
@@ -83,7 +206,7 @@
       "name": "high_depth_coarse_to_fine",
       "depth": 15000,
       "g_start": 8,
-      "runtime_seconds": 2.282782700029202,
+      "runtime_seconds": 2.6036060999613255,
       "partition": [
         2,
         2,
@@ -104,7 +227,7 @@
       "name": "high_depth_direct",
       "depth": 15000,
       "g_start": 2,
-      "runtime_seconds": 5.3809943000087515,
+      "runtime_seconds": 3.577987299999222,
       "partition": [
         6,
         8,
@@ -134,7 +257,7 @@
     "sample_median_wcrt_ms": 42.077,
     "random_search_budget": 47,
     "estimated_random_success_probability": 0.004689206197178275,
-    "sampling_seconds": 1.9941279999911785,
+    "sampling_seconds": 1.3008734001778066,
     "practical_below_median_percent": 52.898257955652724
   }
 }

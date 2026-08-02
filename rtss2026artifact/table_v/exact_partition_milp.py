@@ -9,6 +9,7 @@ from scipy.sparse import lil_matrix
 
 from compiled_wcrt import CompiledWcrtEvaluator
 from load_gpu_execution_profiles import Operator
+import response_time_analysis
 
 
 @dataclass(frozen=True)
@@ -112,6 +113,14 @@ def solve_exact_partition(expressions: list[str],
     if abs(verified_wcrt - result.fun) > 1e-5:
         raise RuntimeError(
             f"MILP objective {result.fun} != TG-DFS value {verified_wcrt}"
+        )
+    raw_wcets = static_wcets.copy()
+    for operator, execution_time in zip(operators, execution_times):
+        raw_wcets[operator.name] = execution_time
+    raw_wcrt = response_time_analysis.compute_max(expressions, raw_wcets)
+    if raw_wcrt != verified_wcrt:
+        raise RuntimeError(
+            f"Compiled WCRT {verified_wcrt} != raw TG-DFS value {raw_wcrt}"
         )
 
     return ExactPartitionResult(

@@ -20,19 +20,19 @@
 
 - [ ] Justify the Sec. V claim about integer programming, particularly given smooth execution-time/SM-count relationships.
 
-- [ ] Clarify the representation of $p$ in paragraph 4 of Sec. V.
+- [X] Clarify the representation of $p$ in paragraph 4 of Sec. V.
 
-- [ ] Move or omit unnecessary detail in Sec. V paragraph 4, potentially placing it in an algorithm figure.
+- [X] Move or omit unnecessary detail in Sec. V paragraph 4, potentially placing it in an algorithm figure.
 
-- [ ] Define “balanced-transfer neighborhood” in the final paragraph of Sec. V.
+- [X] Define “balanced-transfer neighborhood” in the final paragraph of Sec. V.
 
-- [ ] In Sec. VI, explicitly state that the embedded GPU on the Orin is not used.
+- [X] In Sec. VI, explicitly state that the embedded GPU on the Orin is not used.
 
-- [ ] Remove or rewrite “is not an oversight” in Sec. VI-A, paragraph 3.
+- [X] Remove or rewrite “is not an oversight” in Sec. VI-A, paragraph 3.
 
-- [ ] Explain polling before it appears in the final paragraph of Sec. VI-A; clarify whether the greedy scheduler polls and what it is compared against.
+- [X] Explain polling before it appears in the final paragraph of Sec. VI-A; clarify whether the greedy scheduler polls and what it is compared against.
 
-- [ ] Define the “compute” method in Sec. VI-B, paragraph 2.
+- [U] Define the “compute” method in Sec. VI-B, paragraph 2.
 
 - [ ] Clarify what “4 random seeds” refers to in Sec. VI-B, paragraph 3.
 
@@ -42,7 +42,7 @@
 
 - [ ] Measure CPU-side interference from asynchronous memory copies, as identified in that work.
 
-- [ ] Reassess or support the claim that GC introduces additional host-side overhead in Sec. VI-B.
+- [X] Reassess or support the claim that GC introduces additional host-side overhead in Sec. VI-B.
 
 - [ ] Reconcile the Sec. II-B statement that CPU interference is not considered with the CPU-interference discussion in Sec. VI-B.
 

@@ -1,0 +1,24 @@
+digraph G {
+    VideoSource [WCET=555];
+    FCResize [WCET=69];
+    FCPlaxCham [WCET=593];
+    FCAorticSTE [WCET=1113];
+    FCBModePers [WCET=1130];
+    AIPlaxCham [WCET=5870];
+    AIAorticSTE [WCET=8960];
+    AIBModePers [WCET=8330];
+    PostProcessor [WCET=1790];
+    Visualizer [WCET=943];
+    Holoviz [WCET=2730];
+    VideoSource -> FCResize;
+    FCResize -> FCPlaxCham;
+    FCPlaxCham -> FCAorticSTE;
+    FCAorticSTE -> FCBModePers;
+    FCBModePers -> AIPlaxCham;
+    AIPlaxCham -> AIAorticSTE;
+    AIAorticSTE -> AIBModePers;
+    AIBModePers -> PostProcessor;
+    PostProcessor -> Visualizer;
+    Visualizer -> Holoviz;
+    VideoSource -> Holoviz;
+}

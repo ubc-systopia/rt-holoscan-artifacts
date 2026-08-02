@@ -11,6 +11,12 @@ from pathlib import Path
 import numpy as np
 
 from algorithm_1 import run_partition_search, setup_environment
+from baseline_2025 import (
+    build_serialized_operators,
+    evaluate_valid_serialization_orders,
+    run_2025_tg_dfs,
+    write_linear_graph,
+)
 from compiled_wcrt import CompiledWcrtEvaluator
 from exact_partition_milp import solve_exact_partition
 
@@ -147,6 +153,17 @@ def main():
     parser.add_argument("--cpu-profile", type=Path,
                         default=root / "inputs" / "cpu_execution_profiles.csv")
     parser.add_argument("--cpu-column", default="lockstep_max_ms")
+    parser.add_argument(
+        "--full-gpu-profile", type=Path,
+        default=(root / "inputs" /
+                 "gpu_execution_times_2025_baseline.csv"),
+        help="Full-GPU execution times used by the serialized 2025 baseline",
+    )
+    parser.add_argument(
+        "--analysis-2025", type=Path,
+        default=(root.parents[1] / "rtss2025artifact" / "code" / "TG_DFS.py"),
+        help="Unmodified TG-DFS implementation from the 2025 artifact",
+    )
     parser.add_argument("--sample-count", type=int, default=1_000_000)
     parser.add_argument("--sample-seed", type=int, default=2026)
     parser.add_argument("--write-search-logs", action="store_true")
@@ -170,6 +187,26 @@ def main():
         expressions, static_wcets, operators, TOTAL_SMS
     )
     milp_model_and_solve_seconds = time.perf_counter() - milp_started
+
+    serialized_operators = build_serialized_operators(
+        application_graph=args.graph,
+        cpu_profile=args.cpu_profile,
+        cpu_column=args.cpu_column,
+        full_gpu_profile=args.full_gpu_profile,
+        full_gpu_resources=TOTAL_SMS,
+    )
+    baseline_graph = args.output / "application_2025_serialized.dot"
+    write_linear_graph(serialized_operators, baseline_graph)
+    baseline_2025 = run_2025_tg_dfs(
+        graph=baseline_graph,
+        implementation=args.analysis_2025,
+        operators=serialized_operators,
+    )
+    serialization_range = evaluate_valid_serialization_orders(
+        args.graph, baseline_2025
+    )
+    exact_wcrt_ms = exact.response_time_us / 1000.0
+    baseline_wcrt_ms = baseline_2025.response_time_us / 1000.0
 
     configurations = (
         ("practical_coarse_to_fine", PRACTICAL_DEPTH, COARSE_GRANULARITY),
@@ -234,6 +271,7 @@ def main():
             "gpu_profile": str(args.gpu_profile.resolve()),
             "cpu_profile": str(args.cpu_profile.resolve()),
             "cpu_column": args.cpu_column,
+            "full_gpu_profile": str(args.full_gpu_profile.resolve()),
             "total_sms": TOTAL_SMS,
             "target_granularity": TARGET_GRANULARITY,
             "operator_order": operator_names,
@@ -249,6 +287,52 @@ def main():
             "binary_variables": exact.binary_variables,
             "constraints": exact.constraints,
             "mip_gap": exact.mip_gap,
+        },
+        "baseline_2025": {
+            "analysis_implementation": str(args.analysis_2025.resolve()),
+            "generated_graph": str(baseline_graph.resolve()),
+            "model": (
+                "synchronous CPU + 142-SM GPU chain with a direct "
+                "source-to-sink edge preventing cross-iteration pipelining"
+            ),
+            "operator_order": [
+                operator.name for operator in baseline_2025.operators
+            ],
+            "operator_times": [
+                {
+                    "name": operator.name,
+                    "cpu_time_us": operator.cpu_time_us,
+                    "gpu_time_us": operator.gpu_time_us,
+                    "combined_time_us": operator.combined_time_us,
+                }
+                for operator in baseline_2025.operators
+            ],
+            "tg_dfs_expressions": baseline_2025.expression_count,
+            "wcrt_ms": baseline_wcrt_ms,
+            "new_analysis_wcrt_ms": exact_wcrt_ms,
+            "new_analysis_reduction_percent": (
+                (baseline_wcrt_ms - exact_wcrt_ms)
+                / baseline_wcrt_ms * 100.0
+            ),
+            "baseline_to_new_ratio": baseline_wcrt_ms / exact_wcrt_ms,
+            "valid_serializations": serialization_range["count"],
+            "best_case_serialized_wcrt_ms": (
+                serialization_range["minimum_response_time_us"] / 1000.0
+            ),
+            "best_case_serialization": serialization_range["minimum_order"],
+            "worst_case_serialized_wcrt_ms": (
+                serialization_range["maximum_response_time_us"] / 1000.0
+            ),
+            "worst_case_serialization": serialization_range["maximum_order"],
+            "new_analysis_reduction_vs_best_serialization_percent": (
+                (serialization_range["minimum_response_time_us"]
+                 - exact.response_time_us)
+                / serialization_range["minimum_response_time_us"] * 100.0
+            ),
+            "best_serialization_to_new_ratio": (
+                serialization_range["minimum_response_time_us"]
+                / exact.response_time_us
+            ),
         },
         "algorithm_1": searches,
         "sampled_partition_distribution": distribution,
@@ -269,6 +353,20 @@ def main():
             result["milp"]["model_and_solve_seconds"], "",
             0.0, " ".join(map(str, exact.allocation)),
         ))
+        writer.writerow((
+            "2025_TG_DFS_serialized_full_gpu", "", "", baseline_wcrt_ms,
+            "", "", "", "",
+        ))
+        writer.writerow((
+            "2025_TG_DFS_best_valid_serialization", "", "",
+            serialization_range["minimum_response_time_us"] / 1000.0,
+            "", "", "", "",
+        ))
+        writer.writerow((
+            "2025_TG_DFS_worst_valid_serialization", "", "",
+            serialization_range["maximum_response_time_us"] / 1000.0,
+            "", "", "", "",
+        ))
         for search in searches:
             writer.writerow((
                 search["name"], search["depth"], search["g_start"],
@@ -283,6 +381,18 @@ def main():
         f"MILP optimum: {result['milp']['wcrt_ms']:.3f} ms at "
         f"{exact.allocation} "
         f"({milp_model_and_solve_seconds:.3f} s model + solve)"
+    )
+    print(
+        f"2025 serialized full-GPU baseline: {baseline_wcrt_ms:.3f} ms; "
+        f"new analysis is "
+        f"{result['baseline_2025']['new_analysis_reduction_percent']:.2f}% "
+        f"lower"
+    )
+    print(
+        f"2025 range across {serialization_range['count']} valid linear "
+        f"orders: "
+        f"{serialization_range['minimum_response_time_us'] / 1000.0:.3f}--"
+        f"{serialization_range['maximum_response_time_us'] / 1000.0:.3f} ms"
     )
     for search in searches:
         print(

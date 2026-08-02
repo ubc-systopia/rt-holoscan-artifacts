@@ -1,0 +1,42 @@
+{
+  "verification_claim": "MILP witness independently re-evaluated; every full-instance partition checked; randomized MILPs matched brute force",
+  "full_instance": {
+    "operator_order": [
+      "GPU-FCPlaxCham",
+      "GPU-FCAorticSTE",
+      "GPU-FCBModePers",
+      "GPU-AIPlaxCham",
+      "GPU-AIAorticSTE",
+      "GPU-AIBModePers",
+      "GPU-PostProcessor"
+    ],
+    "tg_dfs_expression_count": 2489,
+    "independent_affine_row_count": 52,
+    "milp_partition": [
+      2,
+      2,
+      2,
+      22,
+      66,
+      38,
+      10
+    ],
+    "milp_wcrt_us": 19498,
+    "milp_mip_gap": 0.0,
+    "milp_model_and_solve_seconds": 0.11019470007158816,
+    "raw_tg_dfs_wcrt_us": 19498,
+    "independent_parser_wcrt_us": 19498,
+    "full_partition_count_expected": 131115985,
+    "full_partition_count_visited": 131115985,
+    "partition_below_milp_found": false,
+    "exhaustive_enumeration_seconds": 0.3404478000011295,
+    "verified_optimal": true
+  },
+  "randomized_reduced_instances": {
+    "seed": 2026,
+    "trials": 100,
+    "partitions_checked": 9044,
+    "all_optimum_values_match": true,
+    "all_returned_partitions_recheck": true
+  }
+}
